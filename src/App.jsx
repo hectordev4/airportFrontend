@@ -1,29 +1,19 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { FlyServiceProvider } from "./middleware/Context";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Flights from "./pages/Flights";
-import Planes from "./pages/Planes";
-import Airports from "./pages/Airports";
+import Layout from "./layouts/SidebarLayout";
+import { routes } from "./middleware/Routes";
 
 function App() {
   return (
     <FlyServiceProvider>
       <Router> {/* Added Router here */}
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarTrigger />
+        <Layout> {/* Added Layout here */}
           <Routes>
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/flights" element={<Flights />} />
-            <Route path="/planes" element={<Planes />} />
-            <Route path="/airports" element={<Airports />} />
+            {routes.map(({path,element}) => (
+              <Route key={path} path={path} element={element()} />
+            ))}
           </Routes>
-        </SidebarProvider>
+        </Layout>
       </Router> {/* Closed Router here */}
     </FlyServiceProvider>
   );
