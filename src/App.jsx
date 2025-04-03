@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
-import { FlyServiceProvider } from "./middleware/Context";
+import { AppServiceProvider } from "./middleware/Context";
 import Layout from "./layouts/SidebarLayout";
 import { routes } from "./middleware/Routes";
 
 function App() {
   return (
-    <FlyServiceProvider>
+    <AppServiceProvider>
       <Router> {/* Added Router here */}
         <Layout> {/* Added Layout here */}
           <Routes>
@@ -15,7 +15,7 @@ function App() {
           </Routes>
         </Layout>
       </Router> {/* Closed Router here */}
-    </FlyServiceProvider>
+    </AppServiceProvider>
   );
 }
 
