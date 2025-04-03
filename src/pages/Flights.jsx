@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useFlyService } from "@/middleware/Context";
+import React from "react";
+import { useAppService } from "@/middleware/Context";
 
 const Flights = () => {
-  const { getFlights } = useFlyService();
-  const [flights, setFlights] = useState([]);
-
-  useEffect(() => {
-    const fetchFlights = async () => {
-      try {
-        const data = await getFlights(); // Fetch data
-        setFlights(data); // Update state
-      } catch (error) {
-        console.error("Failed to fetch flights:", error);
-      }
-    };
-
-    fetchFlights();
-  }, [getFlights]);
+  const { flights } = useAppService(); // Assume flights are already fetched and stored in context
 
   return (
     <div>
       <h2>Flights</h2>
       <ul>
-        {flights.map((flight) => (
-          <li key={flight.id}>{flight.flightNumber}</li>
-        ))}
+        {flights && flights.length > 0 ? (
+          flights.map((flight) => (
+            <li key={flight.id}>{flight.flightNumber}</li>
+          ))
+        ) : (
+          <p>No flights available.</p>
+        )}
       </ul>
     </div>
   );

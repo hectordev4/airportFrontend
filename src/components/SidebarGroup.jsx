@@ -5,51 +5,51 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router-dom";
-import { useFlyService } from "@/middleware/Context";
+import { useHandleOnClick } from "./handleSidebar"; // Import the hook
 
 export const SidebarGroup = () => {
-  const navigate = useNavigate(); // Hook to programmatically navigate
-  const { getAirports, getFlights, getPlanes } = useFlyService(); // Access fetch functions from context
+  const navigate = useNavigate();
+  const { handleOnClick } = useHandleOnClick(); // Get the functions from the hook
 
   // Menu items
   const items = [
     {
       title: "Home",
-      onClick: () => navigate("/"), // Navigate to the Home page
+      onClick: () => navigate("/"),
       icon: Home,
     },
     {
       title: "Airports",
-      onClick: async () => {
-        await getAirports(); // Fetch airports data
-        navigate("/airports"); // Navigate to the Airports page
+      onClick: () => {
+        navigate("/airports");
+        handleOnClick.airports(); // Call function properly
       },
       icon: Inbox,
     },
     {
       title: "Planes",
-      onClick: async () => {
-        await getPlanes(); // Fetch planes data
-        navigate("/planes"); // Navigate to the Planes page
+      onClick: () => {
+        navigate("/planes");
+        handleOnClick.planes();
       },
       icon: Calendar,
     },
     {
       title: "Flights",
-      onClick: async () => {
-        await getFlights(); // Fetch flights data
-        navigate("/flights"); // Navigate to the Flights page
+      onClick: () => {
+        navigate("/flights");
+        handleOnClick.flights();
       },
       icon: Calendar,
     },
     {
       title: "Search",
-      onClick: () => navigate("/search"), // Navigate to the Search page
+      onClick: () => navigate("/search"),
       icon: Search,
     },
     {
       title: "Settings",
-      onClick: () => navigate("/settings"), // Navigate to the Settings page
+      onClick: () => navigate("/settings"),
       icon: Settings,
     },
   ];

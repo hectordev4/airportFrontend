@@ -4,7 +4,7 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-const flightService = {
+export const flightService = {
   getFlights: async () => {
     try {
       const response = await axios.get(`${BASE_URL}/flights`);
