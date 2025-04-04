@@ -1,44 +1,48 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Home, Search, Settings } from "lucide-react";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router-dom";
+import airportIcon from "../assets/icons/airportIcon.webp";
+import planeIcon from "../assets/icons/planeIcon.webp";
+import flightIcon from "../assets/icons/flightIcon.webp";
+
 
 export const SidebarGroup = () => {
-  const navigate = useNavigate(); // Hook to programmatically navigate
+  const navigate = useNavigate();
 
   // Menu items
   const items = [
     {
       title: "Home",
-      onClick: () => navigate("/"), // Navigate to the Home page
+      onClick: () => navigate("/"),
       icon: Home,
     },
     {
       title: "Airports",
-      onClick: () => navigate("/airports"), // Navigate to the Airports page
-      icon: Inbox,
+      onClick: () => navigate("/airports"),
+      icon: () => <img src={airportIcon} className="w-4.25 h-auto"/>,
     },
     {
       title: "Planes",
-      onClick: () => navigate("/planes"), // Navigate to the Planes page
-      icon: Calendar,
+      onClick: () => navigate("/planes"), 
+      icon: () => <img src={planeIcon} className="w-4.25 h-auto"/>,
     },
     {
       title: "Flights",
-      onClick: () => navigate("/flights"), // Navigate to the Flights page
-      icon: Calendar,
+      onClick: () => navigate("/flights"),
+      icon: () => <img src={flightIcon} className="w-4.25 h-auto"/>,
     },
     {
       title: "Search",
-      onClick: () => navigate("/search"), // Navigate to the Search page
+      onClick: () => navigate("/search"),
       icon: Search,
     },
     {
       title: "Settings",
-      onClick: () => navigate("/settings"), // Navigate to the Settings page
+      onClick: () => navigate("/settings"),
       icon: Settings,
     },
   ];
