@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppService } from "@/middleware/Context";
 
 const Airports = () => {
-  const { airports } = useAppService(); // Access airports data from context
+  const { Services } = useAppService(); // Access Services from context
+  const [airports, setAirports] = useState([]); // Local state for airports
+
+  useEffect(() => {
+    // Fetch airports data when the component mounts
+    Services.airports.getAirports()
+      .then((data) => setAirports(data))
+      .catch((error) => console.error("Failed to fetch airports:", error));
+  }, [Services]);
 
   return (
     <div>

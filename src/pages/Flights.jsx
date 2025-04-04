@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppService } from "@/middleware/Context";
 
 const Flights = () => {
-  const { flights } = useAppService(); // Assume flights are already fetched and stored in context
+  const { Services } = useAppService(); // Access Services from context
+  const [flights, setFlights] = useState([]); // Local state for flights
+
+  useEffect(() => {
+    // Fetch flights data when the component mounts
+    Services.flights.getFlights()
+      .then((data) => setFlights(data))
+      .catch((error) => console.error("Failed to fetch flights:", error));
+  }, [Services]);
 
   return (
     <div>

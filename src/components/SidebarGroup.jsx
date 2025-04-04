@@ -5,51 +5,40 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router-dom";
-import { useHandleOnClick } from "./handleSidebar"; // Import the hook
 
 export const SidebarGroup = () => {
-  const navigate = useNavigate();
-  const { handleOnClick } = useHandleOnClick(); // Get the functions from the hook
+  const navigate = useNavigate(); // Hook to programmatically navigate
 
   // Menu items
   const items = [
     {
       title: "Home",
-      onClick: () => navigate("/"),
+      onClick: () => navigate("/"), // Navigate to the Home page
       icon: Home,
     },
     {
       title: "Airports",
-      onClick: () => {
-        navigate("/airports");
-        handleOnClick.airports(); // Call function properly
-      },
+      onClick: () => navigate("/airports"), // Navigate to the Airports page
       icon: Inbox,
     },
     {
       title: "Planes",
-      onClick: () => {
-        navigate("/planes");
-        handleOnClick.planes();
-      },
+      onClick: () => navigate("/planes"), // Navigate to the Planes page
       icon: Calendar,
     },
     {
       title: "Flights",
-      onClick: () => {
-        navigate("/flights");
-        handleOnClick.flights();
-      },
+      onClick: () => navigate("/flights"), // Navigate to the Flights page
       icon: Calendar,
     },
     {
       title: "Search",
-      onClick: () => navigate("/search"),
+      onClick: () => navigate("/search"), // Navigate to the Search page
       icon: Search,
     },
     {
       title: "Settings",
-      onClick: () => navigate("/settings"),
+      onClick: () => navigate("/settings"), // Navigate to the Settings page
       icon: Settings,
     },
   ];
