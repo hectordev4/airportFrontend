@@ -3,9 +3,9 @@ import { flightService } from "./flightService";
 import { planeService } from "./planeService";
 
 const Services = {
-    airports: airportService,
-    flights: flightService,
-    planes: planeService,
+    airport: airportService,
+    flight: flightService,
+    plane: planeService,
 };
 
 export default Services;

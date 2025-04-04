@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useAppService } from "@/middleware/Context";
 
 const Planes = () => {
-  const { getPlanes } = useAppService();
+  const Services = useAppService();
   const [planes, setPlanes] = useState([]);
 
   useEffect(() => {
     const fetchPlanes = async () => {
       try {
-        const data = await getPlanes; // Fetch data
+        const data = await Services.plane.getPlanes(); // Fetch data
         setPlanes(data); // Update state
         console.log(data);
         
@@ -18,7 +18,7 @@ const Planes = () => {
     };
 
     fetchPlanes();
-  }, [getPlanes]);
+  }, [Services]);
 
   return (
     <div>
