@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useFlyService } from "@/middleware/Context";
+import { useAppService } from "@/middleware/Context";
 
 const Flights = () => {
-  const { getFlights } = useFlyService();
-  const [flights, setFlights] = useState([]);
+  const Services = useAppService(); // Access Services from context
+  const [flights, setFlights] = useState([]); // Local state for flights
 
   useEffect(() => {
-    const fetchFlights = async () => {
+    async function fetchFlights() {
       try {
-        const data = await getFlights(); // Fetch data
+        const data = await Services.flight.getFlights(); // Fetch data
         setFlights(data); // Update state
       } catch (error) {
         console.error("Failed to fetch flights:", error);
       }
-    };
+    }
 
     fetchFlights();
-  }, [getFlights]);
+  }, [Services]);
 
   return (
     <div>

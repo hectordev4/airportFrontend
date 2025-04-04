@@ -5,11 +5,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useNavigate } from "react-router-dom";
-import { useFlyService } from "@/middleware/Context";
 
 export const SidebarGroup = () => {
   const navigate = useNavigate(); // Hook to programmatically navigate
-  const { getAirports, getFlights, getPlanes } = useFlyService(); // Access fetch functions from context
 
   // Menu items
   const items = [
@@ -20,26 +18,17 @@ export const SidebarGroup = () => {
     },
     {
       title: "Airports",
-      onClick: async () => {
-        await getAirports(); // Fetch airports data
-        navigate("/airports"); // Navigate to the Airports page
-      },
+      onClick: () => navigate("/airports"), // Navigate to the Airports page
       icon: Inbox,
     },
     {
       title: "Planes",
-      onClick: async () => {
-        await getPlanes(); // Fetch planes data
-        navigate("/planes"); // Navigate to the Planes page
-      },
+      onClick: () => navigate("/planes"), // Navigate to the Planes page
       icon: Calendar,
     },
     {
       title: "Flights",
-      onClick: async () => {
-        await getFlights(); // Fetch flights data
-        navigate("/flights"); // Navigate to the Flights page
-      },
+      onClick: () => navigate("/flights"), // Navigate to the Flights page
       icon: Calendar,
     },
     {

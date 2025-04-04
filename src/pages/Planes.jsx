@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useFlyService } from "@/middleware/Context";
+import { useAppService } from "@/middleware/Context";
 
 const Planes = () => {
-  const { getPlanes } = useFlyService();
+  const Services = useAppService();
   const [planes, setPlanes] = useState([]);
 
   useEffect(() => {
-    const fetchPlanes = async () => {
+    async function fetchPlanes() {
       try {
-        const data = await getPlanes(); // Fetch data
+        const data = await Services.plane.getPlanes(); // Fetch data
         setPlanes(data); // Update state
       } catch (error) {
         console.error("Failed to fetch planes:", error);
@@ -16,7 +16,7 @@ const Planes = () => {
     };
 
     fetchPlanes();
-  }, [getPlanes]);
+  }, [Services]);
 
   return (
     <div>

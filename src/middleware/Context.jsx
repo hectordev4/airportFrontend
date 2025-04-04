@@ -1,52 +1,17 @@
 import { createContext, useContext } from "react";
-import axios from "axios";
+import Services from "./services";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
 
-const FlyService  = {
-    baseUrl: BASE_URL,
-    
-    getAirports: async () => {
-        try{
-            const response = await axios.get(`${BASE_URL}/airports`);
-            return response.data;
-        }catch(error){
-            console.error("Error retrieving airports:", error);
-            throw error;
-        }
-    },
-    getFlights: async () => {
-        try{
-            const response = await axios.get(`${BASE_URL}/flights`);
-            return response.data;
-        }catch(error){
-            console.error("Error retrieving flights:", error);
-            throw error;
-        }
-    },
-    getPlanes: async () => {
-        try{
-            const response = await axios.get(`${BASE_URL}/planes`);
-            return response.data;
-        }catch(error){
-            console.error("Error retrieving planes:", error);
-            throw error;
-        }
-    },
-}
+const AppServiceContext = createContext(Services);
 
-const FlyServiceContext = createContext(FlyService);
-
-export const useFlyService = () => {
-    return useContext(FlyServiceContext);
+export const useAppService = () => {
+    return useContext(AppServiceContext);
 };
 
-export const FlyServiceProvider = ({ children }) => {
+export const AppServiceProvider = ({ children }) => {
     return (
-        <FlyServiceContext.Provider value={FlyService}>
+        <AppServiceContext.Provider value={Services}>
             {children}
-        </FlyServiceContext.Provider>
+        </AppServiceContext.Provider>
     );
 };
-
-export default FlyService;
