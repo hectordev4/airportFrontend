@@ -22,14 +22,20 @@ const Airports = () => {
             cell: (info) => {
               const value = info.getValue();
 
-              // Handle flights or other arrays/objects
+              // Handle flight departure or arrival flight number arrays
+              if (key === 'flightDepartureNumbers' || key === 'flightArrivalNumbers') {
+                if (Array.isArray(value) && value.length > 0) {
+                  return value.join(', '); // Display all flight numbers in a comma-separated string
+                } else {
+                  return 'No flight number'; // Fallback if there are no flight numbers
+                }
+              }
+
+              // Handle other arrays or objects
               if (Array.isArray(value)) {
-                // Example: if flights array exists, show first flight's flightNumber
-                const flight = value[0]; // assuming the flight is an object with flightNumber
-                return flight?.flightNumber || "No flight number"; // Render flightNumber or fallback text
-              } else if (typeof value === "object" && value !== null) {
-                // If the value is an object (e.g., flight departure/arrival), handle accordingly
-                return JSON.stringify(value); // Could be more specific based on the structure
+                return value[0]?.flightNumber || 'No flight number';
+              } else if (typeof value === 'object' && value !== null) {
+                return JSON.stringify(value); // Could be more specific based on structure
               }
 
               return value || "N/A"; // Render other values or fallback to N/A

@@ -22,11 +22,15 @@ const Planes = () => {
             cell: (info) => {
               const value = info.getValue();
 
-              // If the value is an array (such as 'flight'), handle it
+              // Handle flightNumbers (which are arrays in the plane data)
+              if (key === "flightNumber" && Array.isArray(value)) {
+                // Assuming flightNumber is an array, join them into a string
+                return value.join(", ") || "No flight number"; // Join flight numbers with commas
+              }
+
+              // Handle other arrays (like flights or other related data)
               if (Array.isArray(value)) {
-                // Assuming the first element in the array has the flightNumber
-                const flight = value[0]; // Access the first flight
-                return flight?.flightNumber || "No flight number"; // Render flightNumber or a fallback text
+                return value.length > 0 ? value[0]?.flightNumber || "No flight number" : "No flight number";
               }
 
               // Handle other cases normally
