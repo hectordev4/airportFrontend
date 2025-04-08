@@ -30,6 +30,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { ButtonUpdate } from "./Buttons"
+import { ButtonDelete } from "./Buttons"
 
 export default function DataTable({ data, columns }) {
   const [sorting, setSorting] = React.useState([])
@@ -116,6 +118,7 @@ export default function DataTable({ data, columns }) {
                         )}
                   </TableHead>
                 ))}
+                <TableHead className={"w-[100px]"}>Actions</TableHead>
               </TableRow>
             ))}
           </TableHeader>
@@ -134,6 +137,12 @@ export default function DataTable({ data, columns }) {
                       )}
                     </TableCell>
                   ))}
+                  <TableCell className="w-[100px]">
+                    <div className="flex items-center space-x-2">
+                      <ButtonUpdate id={row.original.id} />
+                      <ButtonDelete id={row.original.id} />
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
