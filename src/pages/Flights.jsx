@@ -52,7 +52,7 @@ const Flights = () => {
 
   return (
     <div>
-      <h2>Flights</h2>
+      <h1>Flights</h1>
       {flights.length > 0 ? (
         <DataTable data={flights} columns={columns} />
       ) : (
