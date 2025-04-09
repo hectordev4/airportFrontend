@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppService } from "@/context/AppServiceContext";
 import DataTable from "@/components/DataTable";
+import { ButtonCreate } from "@/components/Buttons";
 
 const Planes = () => {
   const Services = useAppService();
@@ -50,6 +51,7 @@ const Planes = () => {
   return (
     <div>
       <h2>Planes</h2>
+      <ButtonCreate formType="plane" />
       {planes.length > 0 ? (
         <DataTable data={planes} columns={columns} />
       ) : (

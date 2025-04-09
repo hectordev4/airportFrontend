@@ -1,11 +1,12 @@
 import { useEffect } from "react"
+import { useParams, useLocation } from "react-router-dom"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
-import { usePageService } from "@/hooks/usePageService" // The custom hook
+import { usePageService } from "@/hooks/usePageService"
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -16,7 +17,11 @@ const formSchema = z.object({
   email: z.string().email()
 })
 
-export function AirportForm({ mode = "create", id }) {
+export function AirportForm() {
+  const { id } = useParams()
+  const location = useLocation()
+  const mode = location.pathname.includes("edit") ? "update" : "create"
+
   const { services, methodSuffix } = usePageService()
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -30,7 +35,7 @@ export function AirportForm({ mode = "create", id }) {
     }
   })
 
-  // Load data for update mode
+
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {

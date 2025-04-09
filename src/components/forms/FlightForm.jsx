@@ -1,10 +1,8 @@
-"use client"
-
 import { useEffect } from "react"
+import { useParams, useLocation } from "react-router-dom"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -15,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { usePageService } from "@/hooks/usePageService" // Custom hook for dynamic services
+import { usePageService } from "@/hooks/usePageService"
 
 const formSchema = z.object({
   flightNumber: z.string().min(1, {
@@ -48,7 +46,11 @@ const formSchema = z.object({
   }),
 })
 
-export function FlightForm({ mode = "create", id }) {
+export function FlightForm() {
+  const { id } = useParams()
+  const location = useLocation()
+  const mode = location.pathname.includes("edit") ? "update" : "create"
+
   const { services, methodSuffix } = usePageService()
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -68,13 +70,12 @@ export function FlightForm({ mode = "create", id }) {
     },
   })
 
-  // Load data for update mode
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
         const data = await services.location[`get${methodSuffix}`](id)
         if (data) {
-          form.reset(data) // Pre-fill the form with data
+          form.reset(data)
         }
       }
       fetchData()
@@ -108,23 +109,59 @@ export function FlightForm({ mode = "create", id }) {
             )}
           />
         ))}
-        
-        {["departureAirport", "arrivalAirport", "plane"].map((fieldName) => (
-          <FormField
-            key={fieldName}
-            control={form.control}
-            name={fieldName}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{fieldName.replace(/([A-Z])/g, " $1")}</FormLabel>
-                <FormControl>
-                  <Input placeholder={fieldName} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+
+        <FormField
+          control={form.control}
+          name="departureAirport.code"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Departure Airport Code</FormLabel>
+              <FormControl>
+                <Input placeholder="Code" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="departureAirport.name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Departure Airport Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="arrivalAirport.code"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Arrival Airport Code</FormLabel>
+              <FormControl>
+                <Input placeholder="Code" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="plane"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Plane</FormLabel>
+              <FormControl>
+                <Input placeholder="Plane" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <Button type="submit">{mode === "create" ? "Create" : "Update"}</Button>
       </form>

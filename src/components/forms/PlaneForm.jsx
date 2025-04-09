@@ -1,10 +1,8 @@
-"use client"
-
 import { useEffect } from "react"
+import { useParams, useLocation } from "react-router-dom"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -15,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { usePageService } from "@/hooks/usePageService" // Custom hook for dynamic services
+import { usePageService } from "@/hooks/usePageService"
 
 const formSchema = z.object({
   model: z.string().min(2, {
@@ -27,12 +25,16 @@ const formSchema = z.object({
   registrationNumber: z.string().min(2, {
     message: "Registration Number must be at least 2 characters.",
   }),
-  yearOfManufacture: z.number().min(1900, {
+  yearOfManufacture: z.coerce.number().min(1900, {
     message: "Year of Manufacture must be a valid year.",
   }),
 })
 
-export function PlaneForm({ mode = "create", id }) {
+export function PlaneForm() {
+  const { id } = useParams()
+  const location = useLocation()
+  const mode = location.pathname.includes("edit") ? "update" : "create"
+
   const { services, methodSuffix } = usePageService()
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -44,13 +46,12 @@ export function PlaneForm({ mode = "create", id }) {
     },
   })
 
-  // Load data for update mode
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
         const data = await services.aircraft[`get${methodSuffix}`](id)
         if (data) {
-          form.reset(data) // Pre-fill the form with data
+          form.reset(data)
         }
       }
       fetchData()

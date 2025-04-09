@@ -1,41 +1,36 @@
-// components/Buttons.jsx
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { FormModal } from "./Modal";
+import { useNavigate } from "react-router-dom";
 
-// Button for creating a new entity (airport, flight, plane)
+
 export function ButtonCreate({ formType }) {
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const openModal = () => setModalOpen(true);
+  const navigate = useNavigate();
 
   return (
-    <>
-      <Button onClick={openModal}>Create</Button>
-      <FormModal isOpen={modalOpen} onClose={() => setModalOpen(false)} action="create" formType={formType} />
-    </>
+    <Button onClick={() => navigate(`/${formType}s/new`)}>
+      Create
+    </Button>
   );
 }
 
-// Button for updating an entity (airport, flight, plane)
+
 export function ButtonUpdate({ formType, rowData }) {
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const openModal = () => setModalOpen(true);
+  const navigate = useNavigate();
 
   return (
-    <>
-      <Button onClick={openModal} variant="outline">Update</Button>
-      <FormModal isOpen={modalOpen} onClose={() => setModalOpen(false)} action="update" formData={rowData} formType={formType} />
-    </>
+    <Button
+      variant="outline"
+      onClick={() => navigate(`/${formType}s/edit/${rowData.id}`)}
+    >
+      Update
+    </Button>
   );
 }
 
-// Button for deleting an entity
-export function ButtonDelete() {
-  const handleDelete = () => {
-    // Your delete logic here
-  };
 
-  return <Button variant="destructive" onClick={handleDelete}>Delete</Button>;
+export function ButtonDelete({ onDelete }) {
+  return (
+    <Button variant="destructive" onClick={onDelete}>
+      Delete
+    </Button>
+  );
 }
