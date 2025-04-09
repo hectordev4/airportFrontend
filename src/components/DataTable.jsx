@@ -1,5 +1,4 @@
-// components/DataTable.jsx
-import * as React from "react"
+import * as React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -7,11 +6,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -20,8 +19,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -29,15 +28,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { ButtonUpdate } from "./Buttons"
-import { ButtonDelete } from "./Buttons"
+} from "@/components/ui/table";
+import { ButtonUpdate } from "./Buttons";
+import { ButtonDelete } from "./Buttons";
 
-export default function DataTable({ data, columns }) {
-  const [sorting, setSorting] = React.useState([])
-  const [columnFilters, setColumnFilters] = React.useState([])
-  const [columnVisibility, setColumnVisibility] = React.useState({})
-  const [rowSelection, setRowSelection] = React.useState({})
+export default function DataTable({ data, columns, formType }) {
+  const [sorting, setSorting] = React.useState([]);
+  const [columnFilters, setColumnFilters] = React.useState([]);
+  const [columnVisibility, setColumnVisibility] = React.useState({});
+  const [rowSelection, setRowSelection] = React.useState({});
+
 
   const table = useReactTable({
     data,
@@ -56,12 +56,11 @@ export default function DataTable({ data, columns }) {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        {/* Find first visible string column to filter */}
         {table.getAllColumns().some((col) => col.getCanFilter()) && (
           <Input
             placeholder="Search..."
@@ -139,7 +138,8 @@ export default function DataTable({ data, columns }) {
                   ))}
                   <TableCell className="w-[100px]">
                     <div className="flex items-center space-x-2">
-                      <ButtonUpdate id={row.original.id} />
+                      {/* Pass formType to the ButtonUpdate */}
+                      <ButtonUpdate formType={formType} id={row.original.id} />
                       <ButtonDelete id={row.original.id} />
                     </div>
                   </TableCell>

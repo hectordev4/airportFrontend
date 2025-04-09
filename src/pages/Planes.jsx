@@ -53,7 +53,7 @@ const Planes = () => {
       <h2>Planes</h2>
       <ButtonCreate formType="plane" />
       {planes.length > 0 ? (
-        <DataTable data={planes} columns={columns} />
+        <DataTable data={planes} columns={columns} formType="plane" />
       ) : (
         <p>Loading planes...</p>
       )}

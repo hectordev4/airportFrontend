@@ -58,7 +58,7 @@ const Airports = () => {
       <h2>Airports</h2>
       <ButtonCreate formType="airport" />
       {airports.length > 0 ? (
-        <DataTable data={airports} columns={columns} />
+        <DataTable data={airports} columns={columns} formType="airport" />
       ) : (
         <p>Loading airports...</p>
       )}

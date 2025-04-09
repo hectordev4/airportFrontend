@@ -1,12 +1,12 @@
-import { useEffect } from "react"
-import { useParams, useLocation } from "react-router-dom"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
-import { usePageService } from "@/hooks/usePageService"
+import { useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { useAppService } from "@/context/AppServiceContext";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -14,15 +14,18 @@ const formSchema = z.object({
   country: z.string().min(2),
   code: z.string().min(2),
   phoneNumber: z.string().min(2),
-  email: z.string().email()
-})
+  email: z.string().email(),
+});
 
 export function AirportForm() {
-  const { id } = useParams()
-  const location = useLocation()
-  const mode = location.pathname.includes("edit") ? "update" : "create"
+  const { id } = useParams();
+  const location = useLocation();
+  const mode = location.pathname.includes("edit") ? "update" : "create";
 
-  const { services, methodSuffix } = usePageService()
+  const Services = useAppService();
+  console.log(Services); // Should log the entire `Services` object
+  console.log(Services.airport); // Should log `airportService`
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,29 +35,30 @@ export function AirportForm() {
       code: "",
       phoneNumber: "",
       email: "",
-    }
-  })
-
+    },
+  });
 
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
-        const data = await services.location[`get${methodSuffix}`](id)
+        const data = await services.airport.getAirport(id);
         if (data) {
-          form.reset(data)
+          form.reset(data);
         }
-      }
-      fetchData()
+      };
+      fetchData();
     }
-  }, [id, mode])
+  }, [id, mode, services]);
 
   const onSubmit = async (values) => {
+    console.log(services); // Log services to see if airport exists
     if (mode === "create") {
-      await services.location[`create${methodSuffix}`](values)
+      await services.airport.createAirport(values);
     } else {
-      await services.location[`update${methodSuffix}`](id, values)
+      await services.airport.updateAirport(id, values);
     }
-  }
+  };
+  
 
   return (
     <Form {...form}>
@@ -78,5 +82,5 @@ export function AirportForm() {
         <Button type="submit">{mode === "create" ? "Create" : "Update"}</Button>
       </form>
     </Form>
-  )
+  );
 }

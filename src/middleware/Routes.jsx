@@ -21,7 +21,7 @@ export const routes = [
         element: () => <Airports />,
     },
     {
-        path: "/airports/create",
+        path: "/airports/new",
         element: () => <AirportForm />,
     },
     {
@@ -33,7 +33,7 @@ export const routes = [
         element: () => <Flights />,
     },
     {
-        path: "/flights/create",
+        path: "/flights/new",
         element: () => <FlightForm />,
     },
     {
@@ -45,7 +45,7 @@ export const routes = [
         element: () => <Planes />,
     },
     {
-        path: "/planes/create",
+        path: "/planes/new",
         element: () => <PlaneForm />,
     },
     {
