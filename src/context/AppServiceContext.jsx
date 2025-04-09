@@ -4,9 +4,7 @@ import Services from "../middleware/services";
 
 const AppServiceContext = createContext(Services);
 
-export const useAppService = () => {
-    return useContext(AppServiceContext);
-};
+export const useAppService = () => useContext(AppServiceContext);
 
 export const AppServiceProvider = ({ children }) => {
     return (
