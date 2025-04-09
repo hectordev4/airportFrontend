@@ -1,0 +1,39 @@
+import { createContext, useContext, useState } from "react"
+import { FormModal } from "@/components/Modal"
+
+const ModalContext = createContext()
+
+export const ModalProvider = ({ children }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [action, setAction] = useState("create")
+  const [formType, setFormType] = useState(null)
+  const [formData, setFormData] = useState(null)
+
+  const openModal = ({ action, formType, formData = null }) => {
+    setAction(action)
+    setFormType(formType)
+    setFormData(formData)
+    setIsOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsOpen(false)
+    setFormType(null)
+    setFormData(null)
+  }
+
+  return (
+    <ModalContext.Provider value={{ openModal, closeModal }}>
+      {children}
+      <FormModal
+        action={action}
+        formType={formType}
+        formData={formData}
+        isOpen={isOpen}
+        onClose={closeModal}
+      />
+    </ModalContext.Provider>
+  )
+}
+
+export const useModal = () => useContext(ModalContext)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAppService } from "@/middleware/Context";
+import { useAppService } from "@/context/AppServiceContext";
 import DataTable from "@/components/DataTable";
 
 const Flights = () => {
