@@ -1,8 +1,7 @@
 import axios from "axios";
-// This file is responsible for making API calls related to flights
-
 
 const BASE_URL = import.meta.env.VITE_API_URL;
+console.log("Flight Service Initialized");
 
 export const flightService = {
   getFlights: async () => {
@@ -11,6 +10,42 @@ export const flightService = {
       return response.data;
     } catch (error) {
       console.error("Error retrieving flights:", error);
+      throw error;
+    }
+  },
+  createFlight: async (data) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/flights`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating flight:", error);
+      throw error;
+    }
+  },
+  getById: async (id) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/flights/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error retrieving flight by ID:", error);
+      throw error;
+    }
+  },
+  updateFlight: async (id, data) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/flights/${id}`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating flight:", error);
+      throw error;
+    }
+  },
+  deleteFlight: async (id) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/flights/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting flight:", error);
       throw error;
     }
   },
