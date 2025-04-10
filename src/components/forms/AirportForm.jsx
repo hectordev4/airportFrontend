@@ -53,7 +53,7 @@ export function AirportForm() {
     if (mode === "create") {
       await Services.airport.createAirport(values);
     } else {
-      await Services.airport.updateAirport(id, values);
+      await Services.airport.updateById(id, values);
     }
   };
   

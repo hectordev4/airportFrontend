@@ -47,7 +47,7 @@ export const airportService = {
       return response.data;
     } catch (error) {
       console.error("Error deleting airport:", error);
-      throw error;
+      //throw error;
     }
   },
 };

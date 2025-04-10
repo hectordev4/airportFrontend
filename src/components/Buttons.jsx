@@ -17,12 +17,12 @@ export function ButtonCreate({ formType }) {
 export function ButtonUpdate({ formType, id }) {
   const navigate = useNavigate();
   const Services = useAppService();
-  const DynamicService = Services[formType].getById(id);
+  
 
   const handleUpdateClick = async () => {
     if (id) {
       try {
-        const data = await DynamicService;
+        const data = await Services[formType].getById(id);
         if (data) {
           navigate(`/${formType}s/edit/${id}`, {
             state: { data },
@@ -49,15 +49,15 @@ export function ButtonUpdate({ formType, id }) {
 export function ButtonDelete({ formType, id }) {
   const navigate = useNavigate();
   const Services = useAppService();
-  const DynamicService = Services[formType].deleteById(id);
+ 
 
   const handleDeleteClick = async () => {
       if (id) {
         try {
-          const data = await DynamicService;
-          if (data) {
+          const response = await Services[formType].deleteById(id);
+          if (response) {
             navigate(`/${formType}s`, {
-              state: { data },
+              state: { message: `${formType} deleted successfully` },
             });
           } else {
             console.error(`${formType} data not found for id:`, id);
