@@ -54,7 +54,7 @@ export function PlaneForm() {
     if (mode === "create") {
       await Services.plane.createPlane(values); // Call the createPlane method
     } else {
-      await Services.plane.updatePlane(id, values); // Call the updatePlane method
+      await Services.plane.updateById(id, values); // Call the updatePlane method
     }
   };
 

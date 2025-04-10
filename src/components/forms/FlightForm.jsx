@@ -56,7 +56,7 @@ export function FlightForm() {
     if (mode === "create") {
       await Services.flight.createFlight(values); // Call the createFlight method
     } else {
-      await Services.flight.updateFlight(id, values); // Call the updateFlight method
+      await Services.flight.updateById(id, values); // Call the updateFlight method
     }
   };
 
