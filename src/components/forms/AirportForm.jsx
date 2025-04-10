@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Navigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -52,9 +52,11 @@ export function AirportForm() {
     console.log(Services);
     if (mode === "create") {
       await Services.airport.createAirport(values);
+      Navigate("/airports");
     } else {
       await Services.airport.updateById(id, values);
     }
+    
   };
   
 

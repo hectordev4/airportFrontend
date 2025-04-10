@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Navigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,7 +34,7 @@ export function FlightForm() {
       arrivalAirportId: "",
       departureTime: "",
       arrivalTime: "",
-      aircraftId: "",
+      planeId: "",
       status: "",
     },
   });
@@ -58,12 +58,13 @@ export function FlightForm() {
     } else {
       await Services.flight.updateById(id, values); // Call the updateFlight method
     }
+    Navigate("/flights");
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {["flightNumber", "departureAirportId", "arrivalAirportId", "departureTime", "arrivalTime", "aircraftId", "status"].map((fieldName) => (
+        {["flightNumber", "departureAirportId", "arrivalAirportId", "departureTime", "arrivalTime", "planeId", "status"].map((fieldName) => (
           <FormField
             key={fieldName}
             control={form.control}

@@ -28,19 +28,18 @@ export function PlaneForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       model: "",
       manufacturer: "",
-      capacity: 0,
+      capacity: "",
       registrationNumber: "",
-      status: "",
+      yearOfManufacture: "",
     },
   });
 
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
-        const data = await Services.plane.getById(id); // Use the plane service
+        const data = await Services.plane.getById(id);
         if (data) {
           form.reset(data);
         }
@@ -52,16 +51,19 @@ export function PlaneForm() {
   const onSubmit = async (values) => {
     console.log(Services);
     if (mode === "create") {
-      await Services.plane.createPlane(values); // Call the createPlane method
+      await Services.plane.createPlane(values);
+      Navigate("/planes");
     } else {
-      await Services.plane.updateById(id, values); // Call the updatePlane method
+      await Services.plane.updateById(id, values);
+      Navigate("/planes");
     }
+    
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {["name", "model", "manufacturer", "capacity", "registrationNumber", "status"].map((fieldName) => (
+      <form  className="space-y-6">
+        {[ "model", "manufacturer", "capacity", "registrationNumber", "yearOfManufacture"].map((fieldName) => (
           <FormField
             key={fieldName}
             control={form.control}
@@ -77,7 +79,7 @@ export function PlaneForm() {
             )}
           />
         ))}
-        <Button type="submit">{mode === "create" ? "Create" : "Update"}</Button>
+        <Button type="submit" onSubmit={form.handleSubmit(onSubmit)}>{mode === "create" ? "Create" : "Update"}</Button>
       </form>
     </Form>
   );
