@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useAppService } from "@/context/AppServiceContext";
 
-// Modify the schema to match the plane's fields
+
 const formSchema = z.object({
   name: z.string().min(2),
   model: z.string().min(2),

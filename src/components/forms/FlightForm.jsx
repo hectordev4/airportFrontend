@@ -8,17 +8,18 @@ import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useAppService } from "@/context/AppServiceContext";
 
-// Modify the schema to match the plane's fields
+// Modify the schema to match the flight's fields
 const formSchema = z.object({
-  name: z.string().min(2),
-  model: z.string().min(2),
-  manufacturer: z.string().min(2),
-  capacity: z.number().int().positive(),
-  registrationNumber: z.string().min(2),
-  status: z.string().min(2),
+  flightNumber: z.string().min(2),
+  departureAirportId: z.string().min(2), // You can make it a select dropdown later
+  arrivalAirportId: z.string().min(2), // Same as above
+  departureTime: z.string().min(2), // Use a date-time picker component for this
+  arrivalTime: z.string().min(2), // Use a date-time picker component for this
+  aircraftId: z.string().min(2), // The aircraft associated with this flight
+  status: z.string().min(2), // For example: "scheduled", "delayed", etc.
 });
 
-export function PlaneForm() {
+export function FlightForm() {
   const { id } = useParams();
   const location = useLocation();
   const mode = location.pathname.includes("edit") ? "update" : "create";
@@ -28,11 +29,12 @@ export function PlaneForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      model: "",
-      manufacturer: "",
-      capacity: 0,
-      registrationNumber: "",
+      flightNumber: "",
+      departureAirportId: "",
+      arrivalAirportId: "",
+      departureTime: "",
+      arrivalTime: "",
+      aircraftId: "",
       status: "",
     },
   });
@@ -40,7 +42,7 @@ export function PlaneForm() {
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
-        const data = await Services.plane.getById(id); // Use the plane service
+        const data = await Services.flight.getById(id); // Use the flight service
         if (data) {
           form.reset(data);
         }
@@ -52,16 +54,16 @@ export function PlaneForm() {
   const onSubmit = async (values) => {
     console.log(Services);
     if (mode === "create") {
-      await Services.plane.createPlane(values); // Call the createPlane method
+      await Services.flight.createFlight(values); // Call the createFlight method
     } else {
-      await Services.plane.updatePlane(id, values); // Call the updatePlane method
+      await Services.flight.updateFlight(id, values); // Call the updateFlight method
     }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {["name", "model", "manufacturer", "capacity", "registrationNumber", "status"].map((fieldName) => (
+        {["flightNumber", "departureAirportId", "arrivalAirportId", "departureTime", "arrivalTime", "aircraftId", "status"].map((fieldName) => (
           <FormField
             key={fieldName}
             control={form.control}
