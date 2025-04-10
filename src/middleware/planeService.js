@@ -31,7 +31,7 @@ export const planeService = {
       throw error;
     }
   },
-  updatePlane: async (id, data) => {
+  updateById: async (id, data) => {
     try {
       const response = await axios.put(`${BASE_URL}/planes/${id}`, data);
       return response.data;
@@ -40,7 +40,7 @@ export const planeService = {
       throw error;
     }
   },
-  deletePlane: async (id) => {
+  deleteById: async (id) => {
     try {
       const response = await axios.delete(`${BASE_URL}/planes/${id}`);
       return response.data;

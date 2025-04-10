@@ -139,7 +139,7 @@ export default function DataTable({ data, columns, formType }) {
                   <TableCell className="w-[100px]">
                     <div className="flex items-center space-x-2">
                       <ButtonUpdate formType={formType} id={row.original.id} />
-                      <ButtonDelete id={row.original.id} />
+                      <ButtonDelete formType={formType} id={row.original.id} />
                     </div>
                   </TableCell>
                 </TableRow>

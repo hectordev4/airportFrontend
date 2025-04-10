@@ -32,7 +32,7 @@ export const airportService = {
       throw error;
     }
   },
-  updateAirport: async (id, data) => {
+  updateById: async (id, data) => {
     try {
       const response = await axios.put(`${BASE_URL}/airports/${id}`, data);
       return response.data;
@@ -41,7 +41,7 @@ export const airportService = {
       throw error;
     }
   },
-  deleteAirport: async (id) => {
+  deleteById: async (id) => {
     try {
       const response = await axios.delete(`${BASE_URL}/airports/${id}`);
       return response.data;
