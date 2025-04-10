@@ -1,82 +1,74 @@
-import { useEffect } from "react"
-import { useParams, useLocation } from "react-router-dom"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { usePageService } from "@/hooks/usePageService"
+import { useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { useAppService } from "@/context/AppServiceContext";
 
+// Modify the schema to match the plane's fields
 const formSchema = z.object({
-  model: z.string().min(2, {
-    message: "Model must be at least 2 characters.",
-  }),
-  manufacturer: z.string().min(2, {
-    message: "Manufacturer must be at least 2 characters.",
-  }),
-  registrationNumber: z.string().min(2, {
-    message: "Registration Number must be at least 2 characters.",
-  }),
-  yearOfManufacture: z.coerce.number().min(1900, {
-    message: "Year of Manufacture must be a valid year.",
-  }),
-})
+  name: z.string().min(2),
+  model: z.string().min(2),
+  manufacturer: z.string().min(2),
+  capacity: z.number().int().positive(),
+  registrationNumber: z.string().min(2),
+  status: z.string().min(2),
+});
 
 export function PlaneForm() {
-  const { id } = useParams()
-  const location = useLocation()
-  const mode = location.pathname.includes("edit") ? "update" : "create"
+  const { id } = useParams();
+  const location = useLocation();
+  const mode = location.pathname.includes("edit") ? "update" : "create";
 
-  const { services, methodSuffix } = usePageService()
+  const Services = useAppService();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       model: "",
       manufacturer: "",
+      capacity: 0,
       registrationNumber: "",
-      yearOfManufacture: "",
+      status: "",
     },
-  })
+  });
 
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
-        const data = await services.aircraft[`get${methodSuffix}`](id)
+        const data = await Services.plane.getById(id); // Use the plane service
         if (data) {
-          form.reset(data)
+          form.reset(data);
         }
-      }
-      fetchData()
+      };
+      fetchData();
     }
-  }, [id, mode])
+  }, [id, mode, Services]);
 
   const onSubmit = async (values) => {
+    console.log(Services);
     if (mode === "create") {
-      await services.aircraft[`create${methodSuffix}`](values)
+      await Services.plane.createPlane(values); // Call the createPlane method
     } else {
-      await services.aircraft[`update${methodSuffix}`](id, values)
+      await Services.plane.updatePlane(id, values); // Call the updatePlane method
     }
-  }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {["model", "manufacturer", "registrationNumber", "yearOfManufacture"].map((fieldName) => (
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {["name", "model", "manufacturer", "capacity", "registrationNumber", "status"].map((fieldName) => (
           <FormField
             key={fieldName}
             control={form.control}
             name={fieldName}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{fieldName.replace(/([A-Z])/g, " $1")}</FormLabel>
+                <FormLabel className="capitalize">{fieldName.replace(/([A-Z])/g, " $1")}</FormLabel>
                 <FormControl>
                   <Input placeholder={fieldName} {...field} />
                 </FormControl>
@@ -88,5 +80,5 @@ export function PlaneForm() {
         <Button type="submit">{mode === "create" ? "Create" : "Update"}</Button>
       </form>
     </Form>
-  )
+  );
 }

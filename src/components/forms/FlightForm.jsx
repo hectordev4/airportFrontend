@@ -1,106 +1,74 @@
-import { useEffect } from "react"
-import { useParams, useLocation } from "react-router-dom"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { usePageService } from "@/hooks/usePageService"
+import { useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { useAppService } from "@/context/AppServiceContext";
 
+// Modify the schema to match the plane's fields
 const formSchema = z.object({
-  flightNumber: z.string().min(1, {
-    message: "Flight number is required",
-  }),
-  departureTime: z.string().min(1, {
-    message: "Departure time is required",
-  }),
-  arrivalTime: z.string().min(1, {
-    message: "Arrival time is required",
-  }),
-  status: z.string().min(1, {
-    message: "Status is required",
-  }),
-  departureAirport: z.object({
-    code: z.string().min(1, {
-      message: "Departure airport code is required",
-    }),
-    name: z.string().min(1, {
-      message: "Departure airport name is required",
-    }),
-  }),
-  arrivalAirport: z.object({
-    code: z.string().min(1, {
-      message: "Arrival airport code is required",
-    }),
-  }),
-  plane: z.string().min(1, {
-    message: "Plane is required",
-  }),
-})
+  name: z.string().min(2),
+  model: z.string().min(2),
+  manufacturer: z.string().min(2),
+  capacity: z.number().int().positive(),
+  registrationNumber: z.string().min(2),
+  status: z.string().min(2),
+});
 
-export function FlightForm() {
-  const { id } = useParams()
-  const location = useLocation()
-  const mode = location.pathname.includes("edit") ? "update" : "create"
+export function PlaneForm() {
+  const { id } = useParams();
+  const location = useLocation();
+  const mode = location.pathname.includes("edit") ? "update" : "create";
 
-  const { services, methodSuffix } = usePageService()
+  const Services = useAppService();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      flightNumber: "",
-      departureTime: "",
-      arrivalTime: "",
+      name: "",
+      model: "",
+      manufacturer: "",
+      capacity: 0,
+      registrationNumber: "",
       status: "",
-      departureAirport: {
-        code: "",
-        name: "",
-      },
-      arrivalAirport: {
-        code: "",
-      },
-      plane: "",
     },
-  })
+  });
 
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
-        const data = await services.location[`get${methodSuffix}`](id)
+        const data = await Services.plane.getById(id); // Use the plane service
         if (data) {
-          form.reset(data)
+          form.reset(data);
         }
-      }
-      fetchData()
+      };
+      fetchData();
     }
-  }, [id, mode])
+  }, [id, mode, Services]);
 
   const onSubmit = async (values) => {
+    console.log(Services);
     if (mode === "create") {
-      await services.location[`create${methodSuffix}`](values)
+      await Services.plane.createPlane(values); // Call the createPlane method
     } else {
-      await services.location[`update${methodSuffix}`](id, values)
+      await Services.plane.updatePlane(id, values); // Call the updatePlane method
     }
-  }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {["flightNumber", "departureTime", "arrivalTime", "status"].map((fieldName) => (
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {["name", "model", "manufacturer", "capacity", "registrationNumber", "status"].map((fieldName) => (
           <FormField
             key={fieldName}
             control={form.control}
             name={fieldName}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{fieldName.replace(/([A-Z])/g, " $1")}</FormLabel>
+                <FormLabel className="capitalize">{fieldName.replace(/([A-Z])/g, " $1")}</FormLabel>
                 <FormControl>
                   <Input placeholder={fieldName} {...field} />
                 </FormControl>
@@ -109,62 +77,8 @@ export function FlightForm() {
             )}
           />
         ))}
-
-        <FormField
-          control={form.control}
-          name="departureAirport.code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Departure Airport Code</FormLabel>
-              <FormControl>
-                <Input placeholder="Code" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="departureAirport.name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Departure Airport Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="arrivalAirport.code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Arrival Airport Code</FormLabel>
-              <FormControl>
-                <Input placeholder="Code" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="plane"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Plane</FormLabel>
-              <FormControl>
-                <Input placeholder="Plane" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <Button type="submit">{mode === "create" ? "Create" : "Update"}</Button>
       </form>
     </Form>
-  )
+  );
 }
