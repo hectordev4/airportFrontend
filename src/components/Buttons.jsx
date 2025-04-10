@@ -14,27 +14,27 @@ export function ButtonCreate({ formType }) {
 }
 
 
-export function ButtonUpdate({ formType, rowData }) {
+export function ButtonUpdate({ formType, id }) {
   const navigate = useNavigate();
-  const Services = useAppService(); // Access the airport service from context
+  const Services = useAppService();
+  const DynamicService = Services[formType].getById(id);
 
   const handleUpdateClick = async () => {
-    if (rowData && rowData.id) {
+    if (id) {
       try {
-        const airportData = await Services.airport.getById(rowData.id);
-        
-        if (airportData) {
-          navigate(`/${formType}s/edit/${rowData.id}`, {
-            state: { airportData },
+        const data = await DynamicService;
+        if (data) {
+          navigate(`/${formType}s/edit/${id}`, {
+            state: { data },
           });
         } else {
-          console.error("Airport data not found for id:", rowData.id);
+          console.error(`${formType} data not found for id:`, id);
         }
       } catch (error) {
-        console.error("Error fetching airport data:", error);
+        console.error(`Error fetching ${formType} data:`, error);
       }
     } else {
-      console.error("ButtonUpdate error: rowData or rowData.id is undefined", rowData);
+      console.error("ButtonUpdate error: id is undefined");
     }
   };
 
@@ -46,14 +46,13 @@ export function ButtonUpdate({ formType, rowData }) {
 }
 
 
-
-export function ButtonDelete({ rowData }) {
+export function ButtonDelete({ id }) {
   const Services = useAppService();
   const navigate = useNavigate();
 
   const handleDeleteClick = async () => {
-    if (!rowData || !rowData.id) {
-      console.error("ButtonDelete error: rowData or rowData.id is undefined", rowData);
+    if (!id) {
+      console.error("ButtonDelete error: id is undefined");
       return;
     }
 
@@ -61,7 +60,7 @@ export function ButtonDelete({ rowData }) {
     if (!confirmDelete) return;
 
     try {
-      await Services.airport.deleteAirport(rowData.id);
+      await Services.airport.deleteAirport(id);
       alert("Airport deleted successfully.");
       navigate(-1);
     } catch (error) {

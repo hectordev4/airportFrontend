@@ -56,7 +56,7 @@ const Flights = () => {
       <h1>Flights</h1>
       <ButtonCreate formType="flight" />
       {flights.length > 0 ? (
-        <DataTable data={flights} columns={columns} formType="flights" />
+        <DataTable data={flights} columns={columns} formType="flight" />
       ) : (
         <p>Loading flights...</p>
       )}

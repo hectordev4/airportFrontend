@@ -23,6 +23,15 @@ export const airportService = {
       throw error;
     }
   },
+  getById: async (id) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/airports/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error retrieving airport by ID:", error);
+      throw error;
+    }
+  },
   updateAirport: async (id, data) => {
     try {
       const response = await axios.put(`${BASE_URL}/airports/${id}`, data);

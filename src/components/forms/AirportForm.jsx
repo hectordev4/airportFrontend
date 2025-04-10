@@ -23,8 +23,6 @@ export function AirportForm() {
   const mode = location.pathname.includes("edit") ? "update" : "create";
 
   const Services = useAppService();
-  console.log(Services); // Should log the entire `Services` object
-  console.log(Services.airport); // Should log `airportService`
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -41,21 +39,21 @@ export function AirportForm() {
   useEffect(() => {
     if (mode === "update" && id) {
       const fetchData = async () => {
-        const data = await services.airport.getAirport(id);
+        const data = await Services.airport.getById(id);
         if (data) {
           form.reset(data);
         }
       };
       fetchData();
     }
-  }, [id, mode, services]);
+  }, [id, mode, Services]);
 
   const onSubmit = async (values) => {
-    console.log(services); // Log services to see if airport exists
+    console.log(Services);
     if (mode === "create") {
-      await services.airport.createAirport(values);
+      await Services.airport.createAirport(values);
     } else {
-      await services.airport.updateAirport(id, values);
+      await Services.airport.updateAirport(id, values);
     }
   };
   
