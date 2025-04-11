@@ -5,39 +5,18 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Form, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormControl, 
-  FormMessage
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useAppService } from "@/context/AppServiceContext";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
-  flightNumber: z.string().min(2, {
-    message: "Flight number must be at least 2 characters.",
-  }),
-  departureAirportId: z.string().min(2, {
-    message: "Please select a departure airport.",
-  }),
-  arrivalAirportId: z.string().min(2, {
-    message: "Please select an arrival airport.",
-  }),
-  departureTime: z.string().min(2, {
-    message: "Please enter a valid departure time.",
-  }),
-  arrivalTime: z.string().min(2, {
-    message: "Please enter a valid arrival time.",
-  }),
-  aircraftId: z.string().min(2, {
-    message: "Please select an aircraft.",
-  }),
-  status: z.string().min(2, {
-    message: "Please select a valid status.",
-  }),
+  flightNumber: z.string().min(2, { message: "Must be at least 2 characters" }),
+  departureAirportId: z.string().min(1, { message: "Required" }),
+  arrivalAirportId: z.string().min(1, { message: "Required" }),
+  departureTime: z.string().min(1, { message: "Required" }),
+  arrivalTime: z.string().min(1, { message: "Required" }),
+  aircraftId: z.string().min(1, { message: "Required" }),
+  status: z.string().min(2, { message: "Must be at least 2 characters" }),
 });
 
 export function FlightForm() {
@@ -67,11 +46,9 @@ export function FlightForm() {
       const fetchData = async () => {
         try {
           const data = await Services.flight.getById(id);
-          if (data) {
-            form.reset(data);
-          }
+          if (data) form.reset(data);
         } catch (error) {
-          setError("Failed to load flight data. Please try again later.");
+          setError("Failed to load flight data");
         }
       };
       fetchData();
@@ -84,14 +61,13 @@ export function FlightForm() {
     try {
       if (mode === "create") {
         await Services.flight.createFlight(values);
-        form.reset();
         navigate("/flights");
       } else {
         await Services.flight.updateById(id, values);
         navigate("/flights");
       }
     } catch (error) {
-      setError(error.message || "There was an error submitting the form");
+      setError(error.message || "Submission failed");
     } finally {
       setIsSubmitting(false);
     }
@@ -100,16 +76,12 @@ export function FlightForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {error && (
-          <div className="text-red-500 text-sm py-2 px-3 rounded-md bg-red-50">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-red-500 text-sm p-2 rounded bg-red-50">{error}</div>}
 
         {[
           "flightNumber",
-          "departureAirportId", 
-          "arrivalAirportId",
+          "departureAirportId",
+          "arrivalAirportId", 
           "departureTime",
           "arrivalTime",
           "aircraftId",
@@ -119,17 +91,17 @@ export function FlightForm() {
             key={field}
             control={form.control}
             name={field}
-            render={({ field }) => (
+            render={({ field: fieldProps }) => (
               <FormItem>
                 <FormLabel className="capitalize">
                   {field.replace(/([A-Z])/g, " $1")}
                 </FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder={`Enter ${field.replace(/([A-Z])/g, " $1")}`}
-                    {...field}
+                  <Input
+                    {...fieldProps}
                     disabled={isSubmitting}
                     type={field.includes("Time") ? "datetime-local" : "text"}
+                    placeholder={`Enter ${field.replace(/([A-Z])/g, " $1")}`}
                   />
                 </FormControl>
                 <FormMessage />
@@ -144,9 +116,7 @@ export function FlightForm() {
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               {mode === "create" ? "Creating..." : "Updating..."}
             </>
-          ) : (
-            mode === "create" ? "Create Flight" : "Update Flight"
-          )}
+          ) : mode === "create" ? "Create Flight" : "Update Flight"}
         </Button>
       </form>
     </Form>

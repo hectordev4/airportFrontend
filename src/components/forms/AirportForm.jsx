@@ -5,25 +5,17 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Form, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormControl, 
-  FormMessage,
-  FormDescription 
-} from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useAppService } from "@/context/AppServiceContext";
 import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  city: z.string().min(2, { message: "City must be at least 2 characters." }),
-  country: z.string().min(2, { message: "Country must be at least 2 characters." }),
-  code: z.string().min(2, { message: "Code must be at least 2 characters." }),
-  phoneNumber: z.string().min(2, { message: "Phone number must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
+  name: z.string().min(2, { message: "Must be at least 2 characters" }),
+  city: z.string().min(2, { message: "Must be at least 2 characters" }),
+  country: z.string().min(2, { message: "Must be at least 2 characters" }),
+  code: z.string().min(2, { message: "Must be at least 2 characters" }),
+  phoneNumber: z.string().min(2, { message: "Must be at least 2 characters" }),
+  email: z.string().email({ message: "Must be a valid email" }),
 });
 
 export function AirportForm() {
@@ -54,7 +46,7 @@ export function AirportForm() {
           const data = await Services.airport.getById(id);
           if (data) form.reset(data);
         } catch (error) {
-          setError("Failed to load airport data. Please try again later.");
+          setError("Failed to load airport data");
         }
       };
       fetchData();
@@ -67,14 +59,13 @@ export function AirportForm() {
     try {
       if (mode === "create") {
         await Services.airport.createAirport(values);
-        form.reset();
         navigate("/airports");
       } else {
         await Services.airport.updateById(id, values);
         navigate("/airports");
       }
     } catch (error) {
-      setError(error.message || "There was an error submitting the form");
+      setError(error.message || "Submission failed");
     } finally {
       setIsSubmitting(false);
     }
@@ -83,27 +74,23 @@ export function AirportForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {error && (
-          <div className="text-red-500 text-sm py-2 px-3 rounded-md bg-red-50">
-            {error}
-          </div>
-        )}
-        
+        {error && <div className="text-red-500 text-sm p-2 rounded bg-red-50">{error}</div>}
+
         {["name", "city", "country", "code", "phoneNumber", "email"].map((field) => (
           <FormField
             key={field}
             control={form.control}
             name={field}
-            render={({ field }) => (
+            render={({ field: fieldProps }) => (
               <FormItem>
                 <FormLabel className="capitalize">
-                  {field.name.replace(/([A-Z])/g, " $1")}
+                  {field.replace(/([A-Z])/g, " $1")}
                 </FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder={`Enter ${field}`} 
-                    {...field} 
+                  <Input
+                    {...fieldProps}
                     disabled={isSubmitting}
+                    placeholder={`Enter ${field.replace(/([A-Z])/g, " $1")}`}
                   />
                 </FormControl>
                 <FormMessage />
@@ -111,16 +98,14 @@ export function AirportForm() {
             )}
           />
         ))}
-        
+
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               {mode === "create" ? "Creating..." : "Updating..."}
             </>
-          ) : (
-            mode === "create" ? "Create Airport" : "Update Airport"
-          )}
+          ) : mode === "create" ? "Create Airport" : "Update Airport"}
         </Button>
       </form>
     </Form>
